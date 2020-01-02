@@ -144,4 +144,8 @@ angular
   })
   .directive('loadingSvg', function(reactDirective) {
     return reactDirective(window.CaskCommon.LoadingSVG);
+  }).directive('page404', function(reactDirective){
+    return reactDirective(window.CaskCommon.Page404);
+  }).directive('page500', function(reactDirective){
+    return reactDirective(window.CaskCommon.Page500);
   });

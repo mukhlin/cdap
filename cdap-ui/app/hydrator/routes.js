@@ -240,7 +240,11 @@ angular.module(PKG.name + '.feature.hydrator')
                 }
               },
               (err) => {
-                showError(err);
+                // When namespace is not present, users already see
+                // a page level error, not showing the banner
+                if($stateParams.namespace){
+                  showError(err);
+                }
               }
             );
               return defer.promise;

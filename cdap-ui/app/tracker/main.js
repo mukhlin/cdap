@@ -250,6 +250,41 @@ angular
     var activeThemeClass = caskTheme.getClassName();
     var dataSource = new MyCDAPDataSource($scope);
     getVersion();
+    this.eventEmitter = window.CaskCommon.ee(window.CaskCommon.ee);
+    this.namespaceAvailable = true;
+
+    this.namespaceRefreshFn = () => {
+      dataSource.request({_cdapPath: '/namespaces', method: 'GET'})
+          .then((res) => {
+            if (res.length > 0) {
+              window.CaskCommon.Store.dispatch({
+                type: window.CaskCommon.NameSpaceStoreActions.updateNamespaces,
+                payload: {
+                  namespaces: res,
+                },
+              });
+              this.eventEmitter.emit(
+                  window.CaskCommon.globalEvents.NSAVAILABLE);
+            } else {
+              // TL;DR - This is emitted for Authorization in main.js
+              // This means there is no namespace for the user to work on.
+              // which indicates she/he have no authorization for any
+              // namesapce in the system.
+              this.eventEmitter.emit(
+                  window.CaskCommon.globalEvents.NONAMESPACE);
+            }
+          }, (err) => {
+            this.eventEmitter.emit(window.CaskCommon.globalEvents.NSCALLFAILED);
+          });
+    };
+
+    this.eventEmitter.on(window.CaskCommon.globalEvents.NSCALLFAILED, () => {
+      this.namespaceAvailable = false;
+    });
+
+    this.eventEmitter.on(window.CaskCommon.globalEvents.NSAVAILABLE, () => {
+      this.namespaceAvailable = true;
+    });
 
     $scope.copyrightYear = new Date().getFullYear();
 

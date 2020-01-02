@@ -14,24 +14,41 @@
  * the License.
 */
 
-import React, { Component } from 'react';
+import React, { Component, ReactChild } from 'react';
 import PropTypes from 'prop-types';
 import Page404 from 'components/404';
 import Page500 from 'components/500';
 
 const DEFAULT_STATUS_CODE = 500;
 export const DEFAULT_ERROR_MESSAGE = 'Something went wrong';
+
+interface IError {
+  message: string;
+}
+interface IErrorInfo {
+  componentStack: any;
+}
+interface IInfo {
+  entityName: string;
+  entityType: string;
+  children: ReactChild;
+}
 export default class ErrorBoundary extends Component {
-  static propTypes = {
+  public static propTypes = {
     children: PropTypes.node,
   };
-  state = {
+  public state = {
     error: false,
     message: '',
-    info: {},
+    info: {} as IInfo,
+    statusCode: DEFAULT_STATUS_CODE,
   };
-  componentDidCatch(error, info) {
-    let err, message, statusCode, stackTrace;
+
+  public componentDidCatch(error: IError, info: IErrorInfo) {
+    let err: { message: string; statusCode: number };
+    let message: string;
+    let statusCode: number;
+    let stackTrace: any;
     if (error instanceof Error) {
       message = error.message;
       statusCode = DEFAULT_STATUS_CODE;
@@ -45,6 +62,7 @@ export default class ErrorBoundary extends Component {
         statusCode = DEFAULT_STATUS_CODE;
       }
     }
+
     stackTrace = info.componentStack;
     this.setState({
       error: true,
@@ -53,7 +71,7 @@ export default class ErrorBoundary extends Component {
       info: stackTrace,
     });
   }
-  render() {
+  public render() {
     if (!this.state.error) {
       return this.props.children;
     }

@@ -17,6 +17,7 @@
 import T from 'i18n-react';
 T.setTexts(require('../cdap/text/text-en.yaml'));
 var Store = require('../cdap/services/NamespaceStore').default;
+var NameSpaceStoreActions = require('../cdap/services/NamespaceStore/NamespaceActions').default;
 var ResourceCenterButton = require('../cdap/components/ResourceCenterButton').default;
 var DataPrepHome = require('../cdap/components/DataPrepHome').default;
 var DataPrepHelper = require('../cdap/components/DataPrep/helper');
@@ -104,9 +105,12 @@ var WidgetWrapper = require('../cdap/components/ConfigurationGroup/WidgetWrapper
 var ConfigurationGroupUtilities = require('../cdap/components/ConfigurationGroup/utilities');
 var DynamicFiltersUtilities = require('../cdap/components/ConfigurationGroup/utilities/DynamicPluginFilters');
 var LoadingSVG = require('../cdap/components/LoadingSVG').default;
+var Page404 = require('../cdap/components/404').default;
+var Page500 = require('../cdap/components/500').default;
 
 export {
   Store,
+  NameSpaceStoreActions,
   DataPrepHome,
   DataPrepHelper,
   globalEvents,
@@ -182,4 +186,6 @@ export {
   ConfigurationGroupUtilities,
   DynamicFiltersUtilities,
   LoadingSVG,
+  Page404,
+  Page500,
 };

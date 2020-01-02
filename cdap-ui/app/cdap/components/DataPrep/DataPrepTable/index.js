@@ -31,7 +31,7 @@ import isNil from 'lodash/isNil';
 import T from 'i18n-react';
 import DataQuality from 'components/DataPrep/DataPrepTable/DataQuality';
 import DataType from 'components/DataPrep/DataPrepTable/DataType';
-import ErrorMessageContainer from 'components/DataPrep/ErrorMessageContainer';
+import Page500 from 'components/500';
 // Lazy load polyfill in safari as InteresectionObservers are not implemented there yet.
 (async function() {
   typeof IntersectionObserver === 'undefined'
@@ -387,7 +387,11 @@ export default class DataPrepTable extends Component {
       } else {
         refreshFn = () => window.location.reload();
       }
-      return <ErrorMessageContainer workspaceName={workspaceName} refreshFn={refreshFn} />;
+      let errorMessageTitle = T.translate(`${PREFIX}.dataErrorMessageTitle`);
+      if (workspaceName) {
+        errorMessageTitle = T.translate(`${PREFIX}.dataErrorMessageTitle2`, { workspaceName });
+      }
+      return <Page500 message={errorMessageTitle} refreshFn={refreshFn} />;
     }
 
     // FIXME: Not sure if this is possible now.

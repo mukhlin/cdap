@@ -69,6 +69,11 @@ export default class DataPrepHome extends Component {
   componentWillMount() {
     this.checkBackendUp();
   }
+  componentWillUnmount() {
+    if (this.dataPrepSub) {
+      this.dataPrepSub.unsubscribe();
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.backendCheck) {
@@ -83,7 +88,7 @@ export default class DataPrepHome extends Component {
   }
 
   checkBackendUp() {
-    MyDataPrepApi.ping()
+    this.dataPrepSub = MyDataPrepApi.ping()
       .combineLatest(MyDataPrepApi.getApp())
       .subscribe(
         (res) => {

@@ -17,6 +17,10 @@
  /**
   * OPENMARKET - Event emitted to hub to open the market
   * CLOSEMARKET - Event emitted to hub to close the market
+  * NSCALLFAILED - Event emitted when call to retrieve namespaces fail
+  * NSAVAILABLE - Event emitted when call to namespace succeeds.
+  *               This is useful to notify parts of UI (after namespace is not
+  *               available initially) that namespace is available again.
   */
 export default {
   APPUPLOAD: 'APPICATION_UPLOAD',
@@ -32,4 +36,6 @@ export default {
   PUBLISHPIPELINE: 'PUBLISH_PIPELINE',
   NSPREFERENCESSAVED: 'NS_PREFERENCES_SAVED',
   NAMESPACECREATED: 'NAMESPACE_CREATED',
+  NSCALLFAILED: 'NAMESPACE_CALL_FAILED',
+  NSAVAILABLE: 'NAMESPACE_AVAILABLE'
 };
