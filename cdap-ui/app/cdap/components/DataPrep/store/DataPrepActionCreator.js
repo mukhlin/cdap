@@ -327,9 +327,11 @@ export async function loadTargetDataModelFields() {
     (dm) => dm.id === dataModel && dm.revision === Number(dataModelRevision)
   );
   await setTargetDataModel(targetDataModel);
-  await setTargetModel(
-    targetDataModel && targetDataModel.models.find((m) => m.id === dataModelModel)
-  );
+  if (targetDataModel) {
+    await setTargetModel(targetDataModel.models.find((m) => m.id === dataModelModel));
+  } else {
+    await setTargetModel(null);
+  }
 }
 
 export async function saveTargetDataModelFields() {

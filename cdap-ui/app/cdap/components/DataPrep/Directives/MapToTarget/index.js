@@ -129,12 +129,13 @@ class MapToTarget extends Component {
     const { column, targetDataModel, targetModel } = this.props;
     this.setLoading(true);
     try {
+      await saveTargetDataModelFields();
+
       const directive = 'data-model-map-column ' +
         `'${targetDataModel.url}' '${targetDataModel.id}' ${targetDataModel.revision} ` +
         `'${targetModel.id}' '${field.id}' :${column}`;
 
       await execute([directive]).toPromise();
-      await saveTargetDataModelFields();
 
       this.props.close();
       this.props.onComplete();
