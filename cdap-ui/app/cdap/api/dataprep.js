@@ -39,7 +39,6 @@ const MyDataPrepApi = {
 
   // Wrangler Data Model
 
-  getDataModel: apiCreator(dataSrc, 'GET', 'REQUEST', `${basepath}/`),
   addDataModel: apiCreator(dataSrc, 'POST', 'REQUEST', `${basepath}/datamodels`),
   removeDataModel: apiCreator(dataSrc, 'DELETE', 'REQUEST', `${basepath}/datamodels`),
   addModel: apiCreator(dataSrc, 'POST', 'REQUEST', `${basepath}/models`),
@@ -49,7 +48,7 @@ const MyDataPrepApi = {
     dataSrc,
     'GET',
     'REQUEST',
-    `${datamodelsPath}/:dataModelId:/revisions/:revision`
+    `${datamodelsPath}/:dataModelId/revisions/:dataModelRevision`
   ),
 
   // WRANGLER SERVICE MANAGEMENT

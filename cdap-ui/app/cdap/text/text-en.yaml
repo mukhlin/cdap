@@ -1040,6 +1040,7 @@ features:
       MapToTarget:
         title: Map to Target
         dataModelPlaceholder: Select Data Model
+        searchPlaceholder: Type to search
     pageTitle: '{productName} | {featureName} {workspaceUri}'
     PipelineError:
       bigquery: Unable to find Google BigQuery plugin. Please install Google Cloud Plugins from Hub.
