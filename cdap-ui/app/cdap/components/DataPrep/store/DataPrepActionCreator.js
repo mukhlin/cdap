@@ -371,7 +371,7 @@ export async function saveTargetDataModelFields() {
       await MyDataPrepApi.removeModel(
         Object.assign(
           {
-            modelId: dataModelModel,
+            modelId: oldModelId,
           },
           params
         )
@@ -379,7 +379,7 @@ export async function saveTargetDataModelFields() {
     }
     if (newModelId !== null) {
       await MyDataPrepApi.addModel(params, {
-        id: targetModel.id,
+        id: newModelId,
       }).toPromise();
     }
   }

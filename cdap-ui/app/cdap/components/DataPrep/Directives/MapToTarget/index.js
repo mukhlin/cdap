@@ -135,7 +135,7 @@ class MapToTarget extends Component {
         `'${targetDataModel.url}' '${targetDataModel.id}' ${targetDataModel.revision} ` +
         `'${targetModel.id}' '${field.id}' :${column}`;
 
-      await execute([directive]).toPromise();
+      await execute([directive], false, true).toPromise();
 
       this.props.close();
       this.props.onComplete();
