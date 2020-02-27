@@ -323,9 +323,8 @@ export async function loadTargetDataModelFields() {
     dataModelList = await fetchDataModelList();
   }
 
-  const targetDataModel = dataModelList.find(
-    (dm) => dm.id === dataModel && dm.revision === Number(dataModelRevision)
-  );
+  const rev = Number(dataModelRevision);
+  const targetDataModel = dataModelList.find((dm) => dm.id === dataModel && dm.revision === rev);
   await setTargetDataModel(targetDataModel);
   if (targetDataModel) {
     await setTargetModel(targetDataModel.models.find((m) => m.id === dataModelModel));
@@ -340,22 +339,45 @@ export async function saveTargetDataModelFields() {
     workspaceId: DataPrepStore.getState().dataprep.workspaceId,
   };
 
+  const { targetDataModel, targetModel } = DataPrepStore.getState().dataprep;
+  const newDataModelId = targetDataModel ? targetDataModel.id : null;
+  const newDataModelRevision = targetDataModel ? targetDataModel.revision : null;
+  const newModelId = targetModel ? targetModel.id : null;
+
   // These properties were populated by MyDataPrepApi.getWorkspace API
-  const { dataModel, dataModelModel } = DataPrepStore.getState().dataprep.properties;
-  if (dataModel) {
-    await MyDataPrepApi.removeDataModel(params).toPromise();
-  }
-  if (dataModelModel) {
-    await MyDataPrepApi.removeModel(Object.assign({ modelId: dataModelModel }, params)).toPromise();
+  const {
+    dataModel,
+    dataModelRevision,
+    dataModelModel,
+  } = DataPrepStore.getState().dataprep.properties;
+  const oldDataModelId = dataModel || null;
+  const oldDataModelRevision = isFinite(dataModelRevision) ? Number(dataModelRevision) : null;
+  const oldModelId = dataModelModel || null;
+
+  if (oldDataModelId !== newDataModelId || oldDataModelRevision !== newDataModelRevision) {
+    if (oldDataModelId !== null) {
+      await MyDataPrepApi.removeDataModel(params).toPromise();
+    }
+    if (newDataModelId !== null) {
+      await MyDataPrepApi.addDataModel(params, {
+        id: newDataModelId,
+        revision: newDataModelRevision,
+      }).toPromise();
+    }
   }
 
-  const { targetDataModel, targetModel } = DataPrepStore.getState().dataprep;
-  if (targetDataModel) {
-    await MyDataPrepApi.addDataModel(params, {
-      id: targetDataModel.id,
-      revision: targetDataModel.revision,
-    }).toPromise();
-    if (targetModel) {
+  if (oldModelId !== newModelId) {
+    if (oldModelId !== null) {
+      await MyDataPrepApi.removeModel(
+        Object.assign(
+          {
+            modelId: dataModelModel,
+          },
+          params
+        )
+      ).toPromise();
+    }
+    if (newModelId !== null) {
       await MyDataPrepApi.addModel(params, {
         id: targetModel.id,
       }).toPromise();
@@ -366,9 +388,9 @@ export async function saveTargetDataModelFields() {
     type: DataPrepActions.setProperties,
     payload: {
       properties: {
-        dataModel: targetDataModel ? targetDataModel.id : null,
-        dataModelRevision: targetDataModel ? targetDataModel.revision : null,
-        dataModelModel: targetModel ? targetModel.id : null,
+        dataModel: newDataModelId,
+        dataModelRevision: newDataModelRevision,
+        dataModelModel: newModelId,
       },
     },
   });
