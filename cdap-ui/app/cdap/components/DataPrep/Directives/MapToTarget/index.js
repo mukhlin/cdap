@@ -100,6 +100,26 @@ class MapToTarget extends Component {
     return options;
   }
 
+  highlightText(text) {
+    const searchText = this.state.searchText.trim().toUpperCase();
+    if (searchText) {
+      const index = text.toUpperCase().indexOf(searchText);
+      if (index >= 0) {
+        const leadingText = text.substring(0, index);
+        const highlightedText = text.substring(index, index + searchText.length);
+        const trailingText = text.substring(index + searchText.length);
+        return (
+          <span>
+            {leadingText}
+            <span className='highlight'>{highlightedText}</span>
+            {trailingText}
+          </span>
+        );
+      }
+    }
+    return text;
+  }
+
   async selectTargetDataModel(dataModel) {
     this.setLoading(true);
     try {
@@ -228,7 +248,7 @@ class MapToTarget extends Component {
                 className='target-option'
                 onClick={() => selectFn(option)}
               >
-                {option.name}
+                {this.highlightText(option.name)}
                 <If condition={option.description}>
                   <UncontrolledTooltip
                     target={`map-to-target-option-${index}`}

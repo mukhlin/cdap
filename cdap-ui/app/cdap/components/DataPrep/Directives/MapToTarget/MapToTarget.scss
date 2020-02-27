@@ -15,6 +15,7 @@
  */
 
 $target-option-hover-color: #eeeeee;
+$target-option-highlight-color: #fad7a0;
 
 .map-to-target-directive {
   .second-level-popover {
@@ -53,6 +54,10 @@ $target-option-hover-color: #eeeeee;
       text-overflow: ellipsis;
       overflow: hidden;
       padding: 5px 10px;
+
+      .highlight {
+        background-color: $target-option-highlight-color;
+      }
 
       &:hover {
         background-color: $target-option-hover-color;
