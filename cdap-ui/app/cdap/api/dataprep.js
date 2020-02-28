@@ -43,6 +43,7 @@ const MyDataPrepApi = {
   removeDataModel: apiCreator(dataSrc, 'DELETE', 'REQUEST', `${basepath}/datamodels`),
   addModel: apiCreator(dataSrc, 'POST', 'REQUEST', `${basepath}/models`),
   removeModel: apiCreator(dataSrc, 'DELETE', 'REQUEST', `${basepath}/models/:modelId`),
+  addDataModels: apiCreator(dataSrc, 'POST', 'REQUEST', `${datamodelsPath}`),
   listDataModels: apiCreator(dataSrc, 'GET', 'REQUEST', `${datamodelsPath}`),
   listModels: apiCreator(
     dataSrc,

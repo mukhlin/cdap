@@ -320,7 +320,8 @@ export async function loadTargetDataModelFields() {
 
   let { dataModelList } = DataPrepStore.getState().dataprep;
   if (!Array.isArray(dataModelList)) {
-    dataModelList = await fetchDataModelList();
+    // FIXME Obtain URL from wrangle-data-model-url config variable
+    dataModelList = await fetchDataModelList('https://storage.googleapis.com/bebinu-dev-test-cdap');
   }
 
   const rev = Number(dataModelRevision);
@@ -396,19 +397,20 @@ export async function saveTargetDataModelFields() {
   });
 }
 
-export async function fetchDataModelList() {
+export async function fetchDataModelList(url) {
   const namespace = NamespaceStore.getState().selectedNamespace;
   const params = {
     context: namespace,
   };
 
+  await MyDataPrepApi.addDataModels(params, { url }).toPromise();
   const response = await MyDataPrepApi.listDataModels(params).toPromise();
   const dataModelList = response.values.map((dataModel) => ({
     id: dataModel['namespacedId'].id,
     revision: dataModel.revision,
-    url: dataModel.url || '', // FIXME The url property does not exist right now
     name: dataModel.displayName,
     description: dataModel.description,
+    url,
   }));
   dataModelList.sort((a, b) => a.name.localeCompare(b.name));
 
