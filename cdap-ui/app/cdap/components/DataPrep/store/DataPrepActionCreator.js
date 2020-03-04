@@ -23,6 +23,7 @@ import { directiveRequestBodyCreator } from 'components/DataPrep/helper';
 import { objectQuery } from 'services/helpers';
 import ee from 'event-emitter';
 import { orderBy, find } from 'lodash';
+import { Theme } from 'services/ThemeHelper';
 
 let workspaceRetries;
 
@@ -320,8 +321,7 @@ export async function loadTargetDataModelFields() {
 
   let { dataModelList } = DataPrepStore.getState().dataprep;
   if (!Array.isArray(dataModelList)) {
-    // FIXME Obtain URL from wrangle-data-model-url config variable
-    dataModelList = await fetchDataModelList('https://storage.googleapis.com/bebinu-dev-test-cdap');
+    dataModelList = await fetchDataModelList(Theme.wranglerDataModelUrl);
   }
 
   const rev = Number(dataModelRevision);

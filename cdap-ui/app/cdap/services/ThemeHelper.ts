@@ -71,6 +71,7 @@ interface IOnePoint0SpecJSON extends IThemeJSON {
     'footer-link'?: string;
     'feature-names'?: IJsonFeatureNames;
     'welcome-banner-image'?: string;
+    'wrangler-data-model-url'?: string;
   };
   features?: {
     'about-product'?: boolean;
@@ -189,6 +190,7 @@ interface IThemeObj {
   productLogoAbout?: string;
   productDocumentationLink?: string;
   favicon?: string;
+  wranglerDataModelUrl?: string;
   showDashboard?: boolean;
   showReports?: boolean;
   showDataPrep?: boolean;
@@ -257,6 +259,7 @@ function parse1Point0Spec(themeJSON: IOnePoint0SpecJSON): IThemeObj {
       favicon: '/cdap_assets/img/favicon.png',
       footerText: 'Licensed under the Apache License, Version 2.0',
       footerLink: 'https://www.apache.org/licenses/LICENSE-2.0',
+      wranglerDataModelUrl: null,
       featureNames: {
         analytics: 'Analytics',
         controlCenter: 'Control Center',
@@ -326,6 +329,9 @@ function parse1Point0Spec(themeJSON: IOnePoint0SpecJSON): IThemeObj {
           'welcome-banner-image': `url('${welcomeBannerImage}')`,
         },
       });
+    }
+    if ('wrangler-data-model-url' in contentJson) {
+      content.wranglerDataModelUrl = contentJson['wrangler-data-model-url'];
     }
     if ('feature-names' in contentJson) {
       const featureNames = { ...content.featureNames };
