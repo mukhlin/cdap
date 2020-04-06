@@ -34,7 +34,8 @@ import {
   loadTargetDataModelStates,
   saveTargetDataModelStates,
   setTargetDataModel,
-  setTargetModel
+  setTargetModel,
+  addFieldColumnMapping
 } from 'components/DataPrep/store/DataPrepActionCreator';
 
 const useStyles = makeStyles(theme => ({
@@ -98,6 +99,7 @@ const MapToTarget = (props) => {
     dataModelList,
     targetDataModel,
     targetModel,
+    dataModelFieldMappings,
   } = props;
   const [loading, setLoading] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -118,6 +120,7 @@ const MapToTarget = (props) => {
     })();
     return () => {
       pending = false;
+      setLoading('');
     }
   }, []);
 
@@ -183,24 +186,28 @@ const MapToTarget = (props) => {
     resetTargetOptionsScroll();
   };
 
-  const applyDirective = async (field) => {
+  const applyDirective = (field) => {
     setLoading(`${PREFIX}.executingDirectiveText`);
-    try {
-      await saveTargetDataModelStates();
-
+    saveTargetDataModelStates().then(() => {
       const directive = 'data-model-map-column ' +
         `'${targetDataModel.url}' '${targetDataModel.id}' ${targetDataModel.revision} ` +
         `'${targetModel.id}' '${field.id}' :${column}`;
 
-      await execute([directive], false, true).toPromise();
+      execute([directive], false, true).subscribe(
+        () => {
+          addFieldColumnMapping(field, column);
 
-      close();
-      onComplete();
-    } catch (error) {
-      setError(error, 'Error executing Map to Target directive');
-    } finally {
+          close();
+          onComplete();
+        },
+        error => {
+          setError(error, 'Error executing Map to Target directive');
+        }
+      );
+    }).catch(error => {
+      setError(error);
       setLoading('');
-    }
+    });
   };
 
   const renderHeader = (selection) => {
@@ -318,8 +325,8 @@ const MapToTarget = (props) => {
           }
         );
         filterPlaceholder = T.translate(`${PREFIX}.fieldFilterPlaceholder`);
-        options = applySearch(targetModel.fields || []);
-        selectFn = (field) => (async () => await applyDirective(field))();
+        options = applySearch(targetModel.fields || []).filter(option => !dataModelFieldMappings[option.id]);
+        selectFn = (field) => applyDirective(field);
       } else {
         filterPlaceholder = T.translate(`${PREFIX}.modelFilterPlaceholder`);
         options = applySearch(targetDataModel.models || []);
@@ -366,14 +373,16 @@ MapToTarget.propTypes = {
   dataModelList: PropTypes.array,
   targetDataModel: PropTypes.object,
   targetModel: PropTypes.object,
+  dataModelFieldMappings: PropTypes.object,
 };
 
 const mapStateToProps = state => {
-  const { dataModelList, targetDataModel, targetModel } = state.dataprep;
+  const { dataModelList, targetDataModel, targetModel, dataModelFieldMappings } = state.dataprep;
   return {
     dataModelList,
     targetDataModel,
     targetModel,
+    dataModelFieldMappings,
   };
 };
 

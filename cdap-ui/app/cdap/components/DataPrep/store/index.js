@@ -43,6 +43,7 @@ const defaultInitialState = {
   workspaceInfo: null,
   properties: {},
   dataModelList: null,
+  dataModelFieldMappings: {},
   targetDataModel: null,
   targetModel: null,
 };
@@ -180,6 +181,14 @@ const dataprep = (state = defaultInitialState, action = defaultAction) => {
     case DataPrepActions.setTargetModel:
       stateCopy = Object.assign({}, state, {
         targetModel: action.payload.targetModel,
+      });
+      break;
+    case DataPrepActions.addFieldColumnMapping:
+      const mappingsCopy = Object.assign({}, state.dataModelFieldMappings);
+      delete mappingsCopy[action.payload.column];
+      mappingsCopy[action.payload.field.id] = action.payload.field.uuid;
+      stateCopy = Object.assign({}, state, {
+        dataModelFieldMappings: mappingsCopy,
       });
       break;
     default:

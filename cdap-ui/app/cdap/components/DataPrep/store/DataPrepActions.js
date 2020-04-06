@@ -38,6 +38,7 @@ const DataPrepActions = {
   setDataModelList: 'DATAPREP_SET_DATA_MODEL_LIST',
   setTargetDataModel: 'DATAPREP_SET_TARGET_DATA_MODEL',
   setTargetModel: 'DATAPREP_SET_TARGET_MODEL',
+  addFieldColumnMapping: 'DATAPREP_ADD_FIELD_COLUMN_MAPPING',
 };
 
 export default DataPrepActions;

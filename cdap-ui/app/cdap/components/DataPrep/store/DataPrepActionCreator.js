@@ -511,3 +511,13 @@ export function setTargetModel(model) {
     },
   });
 }
+
+export function addFieldColumnMapping(field, column) {
+  DataPrepStore.dispatch({
+    type: DataPrepActions.addFieldColumnMapping,
+    payload: {
+      field,
+      column,
+    },
+  });
+}
